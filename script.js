@@ -41,6 +41,10 @@ $(window).on('load', function () {
         waterfall();
     })
 
+    var $lastBox = $('#main>div').last();
+    var lastBoxDis = $lastBox.offset().top + Math.floor($lastBox.outerHeight());
+    $('#main').height(lastBoxDis);
+
     $(window).on('scroll', function () {
         if (checkScrollSlide()) {
             render();
