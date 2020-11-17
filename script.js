@@ -1,53 +1,49 @@
-var data = {
-    "content": [
-        {"src": '0.jpg','url':'#'},
-        {"src": '1.jpg','url':'#'},
-        {"src": '2.jpg','url':'#'},
-        {"src": '3.jpg','url':'#'},
-        {"src": '4.jpg','url':'#'},
-        {"src": '5.jpg','url':'#'},
-        {"src": '6.jpg','url':'#'},
-        {"src": '7.jpg','url':'#'},
-        {"src": '8.jpg','url':'#'},
-        {"src": '9.jpg','url':'#'},
-        {"src": '10.jpg','url':'#'},
-        {"src": '11.jpg','url':'#'},
-        {"src": '12.jpg','url':'#'},
-        {"src": '13.jpg','url':'#'},
-        {"src": '14.jpg','url':'#'},
-        {"src": '15.jpg','url':'#'},
-        {"src": '16.jpg','url':'#'},
-        {"src": '17.jpg','url':'#'},
-        {"src": '18.jpg','url':'#'},
-    ]
-};
-
 $(window).on('load', function () {
-    function render() {
-        $.each(data.content, function (key, value) {
-            var oBox = $('<div>').addClass('box').appendTo($('#main'));
-            var oLink = $('<a>').attr('url',$(value).attr('url')).appendTo($(oBox));
-            var oPic = $('<div>').addClass('pic').appendTo($(oLink));
-            var oTit = $('<div>').addClass('title').appendTo($(oLink));
-            var oSpan = $('<span>').appendTo($(oTit));
-            $(oSpan).html(key);
-            var oImg = $('<img>').attr('src', 'images/' + $(value).attr('src')).appendTo($(oPic));
+    var page = 1;
+
+    // html载入
+    function render(page) {
+        // var url = 'http://sx1.com.192.168.86.128.xip.io/apih5video/atlasList';
+        var url = "http://www.myfast.com/api/test/index";
+        var limit = 10;
+        var data = {"page":page,"limit":limit};
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            async:false,
+            success: function(r){
+                // var key = "Y2KxDL9waDOn9Q1q";
+                // var decrypt_data = XXTEA.decryptFromBase64(r, key);
+                // var json_data = JSON.parse(decrypt_data);
+
+                var json_data = r.data;
+                $.each(json_data, function (key, value) {
+                    var oBox = $('<div>').addClass('box').appendTo($('#main'));
+                    var oLink = $('<a>').attr('href', 'details.html?id='+$(value).attr('id')).appendTo($(oBox));
+                    var oPic = $('<div>').addClass('pic').appendTo($(oLink));
+                    var oTit = $('<div>').addClass('title').appendTo($(oLink));
+                    var oSpan = $('<span>').html($(value).attr('title')).appendTo($(oTit));
+                    var oImg = $('<img>').attr('src', $(value).attr('cover')).appendTo($(oPic));
+                });
+            }
         });
     }
 
-    render();
-
+    render(page);
     $("img").on('load', function () {
         waterfall();
     })
 
-    var $lastBox = $('#main>div').last();
-    var lastBoxDis = $lastBox.offset().top + Math.floor($lastBox.outerHeight());
-    $('#main').height(lastBoxDis);
-
+    // 页面滚动
     $(window).on('scroll', function () {
         if (checkScrollSlide()) {
-            render();
+            page++;
+            if (localStorage) {
+                localStorage.page = page;
+            }
+            render(page);
             $("img").on('load', function () {
                 waterfall();
             })
@@ -59,6 +55,7 @@ $(window).on('resize', function () {
     waterfall();
 })
 
+// 生成瀑布流
 function waterfall() {
     var $boxes = $('#main>div');
     var w = $boxes.eq(0).outerWidth();
@@ -92,6 +89,7 @@ function waterfall() {
     });
 }
 
+// 设置瀑布流css
 function setCss(value, top, left) {
     $(value).css({
         'position': 'absolute',
@@ -100,6 +98,7 @@ function setCss(value, top, left) {
     });
 }
 
+// 检测滚动到屏幕底部
 function checkScrollSlide() {
     var $lastBox = $('#main>div').last();
     var lastBoxDis = $lastBox.offset().top + Math.floor($lastBox.outerHeight() / 2);
