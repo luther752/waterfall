@@ -1,6 +1,4 @@
 $(window).on('load', function () {
-    var name = localStorage.name;
-    console.log(name);
     // html载入
     function render() {
         // var url = 'http://sx1.com.192.168.86.128.xip.io/apih5video/getImgInfo';
@@ -105,9 +103,9 @@ function setCss(value, top, left) {
 
 // 左右滑动事件
 $(document).on("pageinit","#show",function(){
-    $('#main').on("swiperight",function () {
-        location.href="index.html";
-    });
+    // $('#main').on("swiperight",function () {
+    //     location.href="index.html";
+    // });
 
     $("#show .img").on("swiperight",function(){
         var current = parseInt($('.current').text());

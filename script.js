@@ -21,7 +21,11 @@ $(window).on('load', function () {
                 var json_data = r.data;
                 $.each(json_data, function (key, value) {
                     var oBox = $('<div>').addClass('box').appendTo($('#main'));
-                    var oLink = $('<a>').attr('href', 'details.html?id='+$(value).attr('id')).appendTo($(oBox));
+                    var oLink = $('<a>').attr(
+                        {
+                            'href':'details.html?id='+$(value).attr('id'),
+                            'target':'_blank'
+                        }).appendTo($(oBox));
                     var oPic = $('<div>').addClass('pic').appendTo($(oLink));
                     var oTit = $('<div>').addClass('title').appendTo($(oLink));
                     var oSpan = $('<span>').html($(value).attr('title')).appendTo($(oTit));
